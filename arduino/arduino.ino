@@ -58,6 +58,15 @@ void setup() {
   leds.show();
 }
 
+/*
+Do this ten times...
+- grab a random value between 1 and 360
+- generate a color given a hue of that number
+- give us the 24 bit representation of that color.
+*/
+
+
+
 #define RED    0xFF0000
 #define GREEN  0x00FF00
 #define BLUE   0x0000FF

@@ -74,8 +74,8 @@ void loop() {
     }
   }
 
-  leds.setPixel(new_color, PINK);
-  leds.setPixel(old_color, BLACK);
+  leds.setPixel(ledloop[new_color], PINK);
+  leds.setPixel(ledloop[old_color], BLACK);
 
   leds.show();
   //int microsec = 100000; // 2000000 / leds.numPixels();  // change them all in 2 seconds

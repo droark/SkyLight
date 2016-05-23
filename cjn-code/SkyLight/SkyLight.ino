@@ -18,9 +18,9 @@
 
 // Settings
 #define NUM_STRIPS 7
-#define NUM_CTRLS 3
-#define FRAME_TICK_HZ 60
-#define MVMNT_TICK_HZ 600
+#define NUM_CTRLS 1
+#define FRAME_TICK_HZ 60  // how many frames per second we update the LEDs
+#define MVMNT_TICK_HZ 600 // 
 #define CHANCE 200
 #define DEFAULT_RATE 15
 #define TICKS_FOR_NEW_COLOR 5
@@ -51,6 +51,8 @@ uint8_t	encpins[2][NUM_CTRLS] = { { PIN_ENC_0_A, PIN_ENC_1_A, PIN_ENC_2_A },{ PI
 
 
 // Data Structures
+
+// Box of light that can move from shape to shape
 typedef struct Box {
 	uint8_t sextant;
 	uint8_t box_idx;
@@ -61,6 +63,8 @@ typedef struct Box {
 	int age = 0;
 } Box;
 
+
+// Point of light that migrates
 typedef struct Pixel {
 	uint8_t sextant;
 	uint16_t addr;
@@ -73,13 +77,16 @@ typedef struct Pixel {
 
 typedef struct CBox {
 	Encoder * enc;
-	uint8_t pin_btn_enc;
-	uint8_t pin_btn_arc;
-	uint8_t color_picker = 0;
-	uint8_t new_color_counter = TICKS_FOR_NEW_COLOR;
-	uint8_t anim_step = STEPS_IN_INJ_ANIM;
-	uint8_t anim_delay_counter = DEFAULT_RATE;
+	// uint8_t pin_btn_enc; // pin of button on rotary encoder
+	uint8_t pin_btn_arc; // pin of arcade button
+	uint8_t color_picker = 0; // what color is this controller currently.
+	uint8_t new_color_counter = TICKS_FOR_NEW_COLOR; // how many ticks of the encoder before we change to the next color.
+
+	uint8_t anim_step = STEPS_IN_INJ_ANIM;  // what step of the animation are we on
+	uint8_t anim_delay_counter = DEFAULT_RATE; // how many ticks before we move to the next animation step
 	bool animating_injection = false; 
+
+
 	bool btn_pressed[2] = { false, false };
 	long btn_press_time[2];
 } CtrlBox;
@@ -103,7 +110,7 @@ uint8_t shape_color[8];
 Box *head_box_ptr;
 Pixel *head_px_ptr;
 
-Encoder encr(1, 1);
+Encoder encr(1, 1);// <---- update these pin assignments
 
 // Gates
 volatile bool show_lights = false;
@@ -156,7 +163,7 @@ void loop() {
 	for (uint8_t i = 0; i < NUM_CTRLS; i++)
 	{
 		// chkEncoder(i);
-		btnEnc(i);
+		//btnEnc(i);
 		btnArcade(i);
 	}
 
@@ -173,10 +180,12 @@ void loop() {
 	}
 }
 
+// Interrupt handler for LED update
 void frameTick() {
 	show_lights = true;
 }
 
+// Interrupt handler for movements
 void mvmntTick() {
 	move = true;
 }
@@ -216,7 +225,7 @@ void doMove() {
 					leds[ctrl_px_inject_path[ctrl[i].anim_step - 1]] = CRGB::Black;
 					// Stop the animation
 					ctrl[i].animating_injection = false;
-					ctrl[i]. anim_step = 0;
+					ctrl[i].anim_step = 0;
 				default:
 					break;
 				}
@@ -271,7 +280,6 @@ void btnArcade(uint8_t idx) {
 				ctrl[idx].animating_injection = true;
 			}
 
-
 				// Inject color
 			injectColor(ctrl[idx].color_picker);
 		}
@@ -283,16 +291,11 @@ void btnArcade(uint8_t idx) {
 
 //TODO:
 void injectColor(uint8_t color) {
-	if (random8() > CHANCE) {
+	//if (random8() > CHANCE) {
 		Box new_box;
 		new_box.hue = color;
 		new_box.next = head_box_ptr;
 		head_box_ptr = &new_box;
-	}
-	else
-	{
-
-	}
 }
 
 void chkEncoder(uint8_t idx) {
@@ -339,6 +342,7 @@ void lightBox(int sextant, int box, CHSV color) {
 	}
 }
 
+/*
 void lightLevelForSextant(int sextant, int level, CHSV color) {
 	for (int j = 0; j < (level == 0 ? 2 : 4); j++) // only 2 shapes on level 0, 4 on all others
 	{
@@ -384,3 +388,4 @@ void lightShapes(int sextant, int shape, CHSV color) {
 		lightShapesForSextant(sextant, shape, color);
 	}
 }
+*/

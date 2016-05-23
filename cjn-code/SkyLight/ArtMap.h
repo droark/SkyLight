@@ -24,16 +24,29 @@ enum Shape
 
 #define SEXTANT_LED_COUNT 426
 
+
+// FOR DEBUGGING
+/*
 // Holds addresses of pixels at the start of each shape in each sextant
 int shape_start_addr[6][19] = 
 {
-	{ 0,3,15,33,45,60,75,90,129,156,183,210,258,270,282,294,312,360,426 },   // First sextant. The rest gets calculated on first startup
+	{ 0,5,17,35,47,62,77,92,131,158,185,212,260,272,284,296,314,362,428 },   // First sextant. The rest gets calculated on first startup
 	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+};*/
+int shape_start_addr[6][19] =
+{
+	{ 0,12,24,36,54,62,77,92,131,158,185,212,260,272,284,296,314,362,428 },   // First sextant. The rest gets calculated on first startup
+	{ 0,12,24,36,54,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 };
+// END DEBUG
 
 
 // How many of each shape are in a sextant. Needed to prevent for-loop spillover.
@@ -63,13 +76,20 @@ const uint8_t levels[5][4] =
 	{ 3,8,9,10 }		// Farthest from audience.
 };
 
+//TODO: update this when we decide to add more controllers
+// Controller box pixel mapping
+const uint8_t ctrl_px_spectrum[10] = {3,4,5,6,7,11,12,13,14,15};
+const uint8_t ctrl_px_selected[9] = {0,1,2,8,9,10,16,17,18};
+const uint8_t ctrl_px_inject_path[10] = {19,20,21,22,23,26,25,27,28,24 };
+
+
 
 // This function populates all the data for the rest of the pixel address array.
 void mapInit() {
 	for (int i = 1; i < 6; i++) {
 		for (int j = 0; j < 18; j++)
 		{
-			shape_start_addr[i][j] = shape_start_addr[i - 1][j] + SEXTANT_LED_COUNT;
+			shape_start_addr[i][j] = shape_start_addr[i - 1][j];// +SEXTANT_LED_COUNT;
 		}
 	}
 }

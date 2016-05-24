@@ -1,7 +1,7 @@
-// Map.h
+// ArtMap.h
 
-#ifndef _MAP_h
-#define _MAP_h
+#ifndef _ARTMAP_h
+#define _ARTMAP_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "arduino.h"
@@ -25,19 +25,8 @@ enum Shape
 #define SEXTANT_LED_COUNT 426
 
 
-// FOR DEBUGGING
-/*
-// Holds addresses of pixels at the start of each shape in each sextant
-int shape_start_addr[6][19] = 
-{
-	{ 0,5,17,35,47,62,77,92,131,158,185,212,260,272,284,296,314,362,428 },   // First sextant. The rest gets calculated on first startup
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-};*/
-
+// Holds addresses of pixels at the start of each shape in each sextant.
+// Most of these pixel address arrays will be initialized by mapInit().
 int shape_start_addr[6][19] =
 {
 	{ 
@@ -50,17 +39,18 @@ int shape_start_addr[6][19] =
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
 };
-// END DEBUG
 
 
 // How many of each shape are in a sextant. Needed to prevent for-loop spillover.
-// this describes how long the inner array is for each inner array in 'shapes' below. 'hexagon' has 3 members, etc...
+// This describes how long the inner array is for each inner array in 'shapes' below.
+// 'hexagon' has 3 members, etc...
 const uint8_t shape_count[8] = {3,1,3,3,4,2,1,1};
 
 // Holds indices of shapes in shape_start_addr that correspond to like shapes
-// the numbers in the below structure are describing the data in shape_start_addr above... they are saying that the indexes in the shape_start_addr at position 0, 2, and 15 are hexagons, etc...
+// The numbers in the below structure are describing the data in shape_start_addr above...
+// They are saying that the indexes in the shape_start_addr at position 0, 2, and 15 are hexagons, etc...
 const uint8_t shapes[8][4] = 
 {
 	{ 0,2,15 },			// HEXAGON		
@@ -70,7 +60,7 @@ const uint8_t shapes[8][4] =
 	{ 1,12,13,14 },		// SM_CHEVRON
 	{ 11,16 },			// LG_CHEVRON
 	{ 7 },				// SM_TRUNC_TRI
-	{ 17 },				// LG_TRUNC_TRI
+	{ 17 }				// LG_TRUNC_TRI
 };
 
 
@@ -113,4 +103,3 @@ void mapInit() {
 }
 
 #endif
-
